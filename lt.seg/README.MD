@@ -22,7 +22,7 @@
 
 ### How to install
 
-* Download latest version from the releases site [https://github.com/de-tudarmstadt-lt/seg/releases][]
+* Download latest version from the releases site https://github.com/tudarmstadt-lt/seg/releases
 * unpack into a directory of choice: `tar -xzvf lt.seg-version-dist.tar.gz -C <your-preferred-directory>`
 * executables can be found in the `bin` directory, e.g. `bin/seg`. You can execute it from any directory.
 * (optional) to access the `seg` binary from anywhere you can add <your-preferred-directory>/bin to PATH: `PATH=<your-preferred-directory>:$PATH` or symlink `seg` into a directory which is already in your PATH
