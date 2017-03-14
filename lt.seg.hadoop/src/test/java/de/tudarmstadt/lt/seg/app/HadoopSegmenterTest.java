@@ -7,6 +7,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
@@ -43,6 +44,7 @@ public class HadoopSegmenterTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testMain() throws Exception{
 		String in = "hadoop-docs-test";
 		String out = "hadoop-out-segmenter2";

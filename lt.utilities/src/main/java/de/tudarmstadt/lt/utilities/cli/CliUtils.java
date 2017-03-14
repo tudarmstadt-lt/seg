@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.lang.StringUtils;
 
 
 public class CliUtils {
@@ -37,11 +38,15 @@ public class CliUtils {
 	public static Map<String, String> getOptionsMap(Option[] options){
 		Map<String, String> map = new HashMap<>();
 		for (Option option : options) {
-			if(option.getValue().contains("=")){
-				String[] split = option.getValue().split("=");
-				map.put(split[0], split[1]);
+			if(option.hasArg() || option.hasArgs()){
+				if(option.getValue().contains("=")){
+					String[] split = option.getValue().split("=");
+					map.put(split[0], split[1]);
+				}else{
+					map.put(option.getLongOpt(), StringUtils.join(option.getValuesList(), ","));
+				}
 			}else{
-				map.put(option.getLongOpt(), option.getValuesList().toString());
+				map.put(option.getLongOpt(), "true");
 			}
 		}
 		return map;

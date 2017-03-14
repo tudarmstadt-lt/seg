@@ -5,10 +5,23 @@
 	<parent>
 	  <groupId>de.tudarmstadt</groupId>
 	  <artifactId>lt.kd-suite</artifactId>
-	  <version>0.7.0</version>
+	  <version>0.7.1</version>
 	</parent>
 	
+	<properties>
+		<hadoop.version>2.6.0-cdh5.4.11</hadoop.version>
+	</properties>
+	
 	<artifactId>lt.seg.hadoop</artifactId>
+
+	<repositories>
+		<repository>
+			<id>cloudera-releases</id>
+			<url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+	</repositories>
 	
 	<build>
 		<plugins>
@@ -67,12 +80,12 @@
 							</excludes>
 						</filter>
 					</filters>
-					<transformers>
+					<!-- <transformers>
 						<transformer
 							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 							<mainClass>de.tudarmstadt.lt.seg.app.HadoopSegmenter</mainClass>
 						</transformer>
-					</transformers>
+					</transformers> -->
 				</configuration>
 				<executions>
 					<execution>
@@ -82,15 +95,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<configuration>
-					<mainClass>MainFinder</mainClass>
-					<classpathScope>test</classpathScope>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -106,10 +110,10 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-minicluster</artifactId>
-			<version>2.6.0</version>
-			<scope>provided</scope>
+		    <groupId>org.apache.hadoop</groupId>
+		    <artifactId>hadoop-client</artifactId>
+		    <version>${hadoop.version}</version>
+		    <scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
