@@ -13,9 +13,10 @@ import de.tudarmstadt.lt.seg.sentence.RuleSplitter;
 public class PerfomanceTest {
 
 	@Test
+	@Ignore
 	public void testRuleTokenizerLarge() throws ClassNotFoundException{
 		Segmenter.main(
-				"--file testdocs.txt --parallel 8 -l --debug -o /dev/null"
+				"--file testdocs.txt --parallel 4 -l --debug -o testdocs.txt.out"
 				.split(" "));
 	}
 	

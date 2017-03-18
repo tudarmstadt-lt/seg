@@ -27,7 +27,11 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Spliterator;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -241,34 +245,10 @@ public class Segmenter implements Runnable{
 
 	private void run_parallel() throws Exception{
 
-
-		//		long start = System.currentTimeMillis();
-		//		IntStream s = IntStream.range(0, 20);
-		////System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");
-		//		s.parallel().forEach(i -> {
-		//			try { Thread.sleep(100); } catch (Exception ignore) {}
-		//			System.out.print((System.currentTimeMillis() - start) + " ");
-		//		});
-		//		val forkJoinPool:ForkJoinPool = new ForkJoinPool(num_threads);
-		//    forkJoinPool.submit(new Runnable() { 
-		//      def run() = lines.parallel()
-		//        .map[String](parsefun)
-		//        .forEach(writefun)
-		//    }).get
-
-
-		// TODO: replace executorservice by the above stream provided parallelism stuff
-		//		ExecutorService t = new ThreadPoolExecutor(_parallelism, _parallelism, 20L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-
 		InputStream in = System.in;
 		if(!"-".equals(_filename_in))
 			in = new FileInputStream(_filename_in);
 		Stream<String> liter = new BufferedReader(new InputStreamReader(in, Charset.defaultCharset())).lines();
-
-		OutputStream out = System.out;
-		if(!"-".equals(_filename_out))
-			out = new FileOutputStream(_filename_out);
-		PrintWriter w = new PrintWriter(new OutputStreamWriter(out, Charset.defaultCharset()));
 
 		ThreadLocal<ISentenceSplitter> sentenceSplitter = ThreadLocal.withInitial(() -> {
 			try {
@@ -284,18 +264,32 @@ public class Segmenter implements Runnable{
 				throw new RuntimeException(e);
 			}
 		});
-
+		
+		final PrintWriter[] w = new PrintWriter[_parallelism];
+		// init writers
+		for(int i = 0; i < _parallelism; i++){
+			OutputStream out = System.out;
+			if(!"-".equals(_filename_out)) {
+				out = new FileOutputStream(String.format("%s_%d", _filename_out, i));
+			}
+			w[i] = new PrintWriter(new OutputStreamWriter(out, Charset.defaultCharset()));
+		}
+		
+		BlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(_parallelism*2, true);
+		ExecutorService es = new ThreadPoolExecutor(_parallelism, _parallelism, 0L, TimeUnit.MILLISECONDS, queue);
+		
 		AtomicLong lc = new AtomicLong(0);
-		ForkJoinPool forkJoinPool = new ForkJoinPool(_parallelism);
-		forkJoinPool.submit(() -> 
-			liter.parallel().forEach((line) -> {
+		liter.forEach((line) -> {
+			// don't try to submit new threads, wait until the thread queue has some capacity again
+			while(queue.remainingCapacity() == 0)
+				try { Thread.sleep(10); } catch (InterruptedException e) {/**/}
+			es.submit(() -> {
 				final long docid = lc.incrementAndGet();
 				if(docid % 1000 == 0)
 					System.err.format("Processing line %d ('%s')%n", docid, _filename_in);
-	
-				String l = line.replace("\\t", "\t").replace("\\n", "\n");
+				final int w_i = (int)(docid % _parallelism);
 				split_and_tokenize(
-						new StringReader(l),
+						new StringReader(line.trim()),
 						String.format("%s:%d", _filename_in, docid),
 						sentenceSplitter.get(), 
 						tokenizer.get(), 
@@ -306,8 +300,38 @@ public class Segmenter implements Runnable{
 						_separator_sentence,
 						_separator_token,
 						_separator_desc,
-						w);
-		})).get();
+						w[w_i]);
+			
+			});
+		});
+		es.shutdown();
+		es.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
+		
+// TODO: the stream parallelism version does not work because it submits too many threads at once
+//		AtomicLong lc = new AtomicLong(0);
+//		ForkJoinPool forkJoinPool = new ForkJoinPool(_parallelism);
+//		forkJoinPool.submit(() -> 
+//			liter.parallel().forEach((line) -> {
+//				final long docid = lc.incrementAndGet();
+//				if(docid % 1000 == 0)
+//					System.err.format("Processing line %d ('%s')%n", docid, _filename_in);
+//	
+//				String l = line.replace("\\t", "\t").replace("\\n", "\n");
+//				split_and_tokenize(
+//						new StringReader(l),
+//						String.format("%s:%d", _filename_in, docid),
+//						sentenceSplitter.get(), 
+//						tokenizer.get(), 
+//						_level_filter,
+//						_level_normalize,
+//						_merge_types,
+//						_merge_tokens,
+//						_separator_sentence,
+//						_separator_token,
+//						_separator_desc,
+//						w);
+//		})).get();
+		
 
 	}
 
