@@ -6,43 +6,24 @@
     <modelVersion>4.0.0</modelVersion>
     
 	<properties>
-    	<kd-suite.version>0.7.1</kd-suite.version>
-		<kd-suite.repodir>${project.basedir}/../repo</kd-suite.repodir>
+    	<seg.version>0.7.1</seg.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<scala.version>2.11.7</scala.version>
 		<scala.binary.version>2.11</scala.binary.version>
 	</properties>
 
     <groupId>de.tudarmstadt</groupId>
-    <artifactId>lt.kd-suite</artifactId>
+    <artifactId>seg</artifactId>
     <version>0.7.1</version>
-    <name>lt.kd-suite</name>
+    <name>seg</name>
 
     <packaging>pom</packaging>
     
-	<repositories>
-		<repository>
-			<id>local-repository</id>
-			<url>file:///${kd-suite.repodir}</url>
-		</repository>
-	</repositories>
 
     <modules>
-        <module>lt.utilities</module>
-        <module>lt.utilities.scala</module>
-        
+        <module>lt.utilities</module>      
         <module>lt.seg</module>
         <module>lt.seg.hadoop</module>
-        <module>lt.lm</module>
-        <module>lt.ltbot</module>
-        <module>lt.lm.webapp</module>
-        <module>lt.parse</module>
-        <module>lt.n2n-v2</module>
-        
-        <module>lt.n2n-v2-scaleout</module>
-        <module>lt.n2n-v2-webdemo</module>
-        <module>lt.rd</module>
-        <module>lt.template-scala</module>
     </modules>
     
 	<dependencies>
