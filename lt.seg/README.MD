@@ -136,6 +136,6 @@ or with sentence splitting before tokenizing:
 		
 		ITokenizer tokenizer = new DiffTokenizer();
 		new RuleSplitter().init(new InputStreamReader(new FileInputStream("your-file"))).forEach(s ->
-			tokenizer.init(...).filteredAndNormalizedTokens(5, 4).forEach(x -> {if(x.startsWith("a")) System.out.println(x);}));
+			tokenizer.init(...).filteredAndNormalizedTokens(5, 4, false, false).forEach(x -> {if(x.startsWith("a")) System.out.println(x);}));
 
 *Note: The supplied Tokenizer and SentenceSplitter are not thread safe, each thread needs its own Tokenizer and SentenceSplitter.*
