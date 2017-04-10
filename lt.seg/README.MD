@@ -22,11 +22,34 @@
 
 ### How to install
 
+#### Install for command line usage
+
 * Download latest version from the releases site https://github.com/tudarmstadt-lt/seg/releases
 * unpack into a directory of choice: `tar -xzvf lt.seg-version-dist.tar.gz -C <your-preferred-directory>`
 * executables can be found in the `bin` directory, e.g. `bin/seg`. You can execute it from any directory.
-* (optional) to access the `seg` binary from anywhere you can add <your-preferred-directory>/bin to PATH: `PATH=<your-preferred-directory>:$PATH` or symlink `seg` into a directory which is already in your PATH
+* (optional) to access the `seg` binary from anywhere you can add <your-preferred-directory>/bin to PATH: `export PATH=<your-preferred-directory>:$PATH` or symlink `seg` into a directory which is already in your PATH
 
+#### Install for programmatic usage
+
+Build with maven:
+
+		git clone https://github.com/tudarmstadt-lt/seg
+		cd seg; mvn package -D skipTests
+
+You can now find the jar here and you can add it as a library to your
+project if your project doesn't use maven:
+
+`seg/lt.seg/target/lt.seg-0.7.1-jar-with-dependencies.jar`
+
+If you want to use it in a maven project:
+
+		mvn install -D skipTests
+
+and add this as dependency to your `pom.xml`:
+
+		<groupId>de.tudarmstadt</groupId>
+		<artifactId>lt.seg</artifactId>
+		<version>0.7.1</version>
 
 *Note: the following description is for unix based systems, you cannot run the startup shell scripts on MS Windows, consider using cygwin or run the java commands manually*
 
@@ -92,16 +115,18 @@ lt.seg comes with a number of parameters, run `seg -?` to get a list of options
 ### Apply segmentation programatically:
 
 programmatic usage is as simple as
+
+		import de.tudarmstadt.lt.seg.*;
 		
-		new DiffTokenizer().init("This is your text you want to tokenize.").foreach(System.out::println)
+		new DiffTokenizer().init("This is your text you want to tokenize.").forEach(System.out::println)
 		
-		new RuleSplitter().init("This is your text you want to split into sentences.").foreach(System.out::println)
+		new RuleSplitter().init("This is your text you want to split into sentences.").forEach(System.out::println)
 
 or
 
-		new DiffTokenizer().init(new InputStreamReader(new FileInputStream("your-file"))).foreach(System.out::println)
+		new DiffTokenizer().init(new InputStreamReader(new FileInputStream("your-file"))).forEach(System.out::println)
 
-		new RuleSplitter().init(new InputStreamReader(new FileInputStream("your-file"))).foreach(System.out::println)
+		new RuleSplitter().init(new InputStreamReader(new FileInputStream("your-file"))).forEach(System.out::println)
 
 more complex filtering, normalization and only printing when tokens start with the character `a`:
 
@@ -110,7 +135,7 @@ more complex filtering, normalization and only printing when tokens start with t
 or with sentence splitting before tokenizing:
 		
 		ITokenizer tokenizer = new DiffTokenizer();
-		new RuleSplitter().init(new InputStreamReader(new FileInputStream("your-file"))).foreach(s -> 
+		new RuleSplitter().init(new InputStreamReader(new FileInputStream("your-file"))).forEach(s ->
 			tokenizer.init(...).filteredAndNormalizedTokens(5, 4).forEach(x -> {if(x.startsWith("a")) System.out.println(x);}));
 
 *Note: The supplied Tokenizer and SentenceSplitter are not thread safe, each thread needs its own Tokenizer and SentenceSplitter.*
