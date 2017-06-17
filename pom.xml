@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     
 	<properties>
-    	<seg.version>0.7.1</seg.version>
+    	<seg.version>0.7.1a</seg.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<scala.version>2.11.7</scala.version>
 		<scala.binary.version>2.11</scala.binary.version>
@@ -14,7 +14,7 @@
 
     <groupId>de.tudarmstadt</groupId>
     <artifactId>seg</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.1a</version>
     <name>seg</name>
 
     <packaging>pom</packaging>
