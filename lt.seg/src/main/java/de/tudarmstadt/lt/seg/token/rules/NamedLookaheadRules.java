@@ -95,7 +95,7 @@ public class NamedLookaheadRules {
             }
         }
         // put the first negative patterns that occur before any positive pattern occurs into a special global reject list and remove it from the pattern map
-        int l = 0; for(; _decisions[l] && l < _patterns.length; l++);
+        int l = 0; for(; !_decisions[l] && l < _patterns.length; l++);
         if(l > 0){
 	        _global_reject_patterns = Arrays.copyOfRange(_patterns, 0, l);
 	        _patterns = Arrays.copyOfRange(_patterns, l, _patterns.length);
