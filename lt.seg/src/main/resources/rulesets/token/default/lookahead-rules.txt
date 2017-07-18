@@ -23,7 +23,7 @@
 ##
 
 # url (rough estimate), can end with closing bracket, but only if an opening bracket occured within the url
-+:EMAIL ((https?)|(ftps?)|(doi))://[^\s:]+(([/a-zA-Z0-9?])|((?<=\([^\(/]{0,20})\)))
++:URI ((https?)|(ftps?)|(doi))://[^\s:]+(([/a-zA-Z0-9?])|((?<=\([^\(/]{0,20})\)))
 
 # websites like amazon.co.uk Fette-henne.info (rough estimate) ... might even be catenated (tagesschau.de-App)
 +:URI (((\w(-\w)?)+\.)+(com|net|org|edu|int|mil|gov|arpa|biz|aero|name|coop|info|pro|museum|asia|[a-z]{2}|[A-Z]{2}))(-((?>\p{L}\p{M}*)|[_\-])+)?
