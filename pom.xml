@@ -4,7 +4,7 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    
+
 	<properties>
     	<seg.version>0.7.1a</seg.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,18 +14,18 @@
 
     <groupId>de.tudarmstadt</groupId>
     <artifactId>seg</artifactId>
-    <version>0.7.1a</version>
+    <version>0.7.1b</version>
     <name>seg</name>
 
     <packaging>pom</packaging>
-    
+
 
     <modules>
-        <module>lt.utilities</module>      
+        <module>lt.utilities</module>
         <module>lt.seg</module>
         <module>lt.seg.hadoop</module>
     </modules>
-    
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
